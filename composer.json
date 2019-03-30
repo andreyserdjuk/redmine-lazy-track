@@ -1,0 +1,17 @@
+{
+    "name": "redmine-lazy-track",
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/kbsali/php-redmine-api.git"
+    }],
+    "require": {
+        "kbsali/redmine-api": "^1.5",
+        "symfony/console": "^4.2",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedmineLogger\\": "src/"
+        }
+    }
+}
