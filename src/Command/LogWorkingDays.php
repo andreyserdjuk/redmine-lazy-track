@@ -47,13 +47,19 @@ class LogWorkingDays extends Command
         $workingDays = self::getWorkingDays($lastDate, $currentDate);
 
         foreach ($workingDays as $workingDay) {
-            self::getClient()->time_entry->create([
-                'issue_id' => $issueId,
-                'spent_on' => $workingDay->format('Y-m-d'),
-                'hours' => 8,
-                'activity_id' => 9, // Development
-                'comments' => $message,
-            ]);
+            $date = $workingDay->format('Y-m-d');
+            try {
+                self::getClient()->time_entry->create([
+                    'issue_id' => $issueId,
+                    'spent_on' => $date,
+                    'hours' => 8,
+                    'activity_id' => 9, // Development
+                    'comments' => $message,
+                ]);
+                $output->writeln(sprintf('Created issue tracking at %s', $date));
+            } catch (\Exception $e) {
+                $output->writeln(sprintf('Failed  issue tracking at %s', $date));
+            }
         }
     }
 
@@ -67,10 +73,10 @@ class LogWorkingDays extends Command
         $lastDate = date_create_from_format('Y-m-d', $lastDate);
 
         $days = [];
-        while ($lastDate <= $currentDate) {
-            $next = $lastDate->modify('+1 day');
-            if ($next->format('N') < 7) {
-                $days[] = $next;
+        while ($lastDate < $currentDate) {
+            $lastDate->modify('+1 day');
+            if ($lastDate->format('N') < 6) {
+                $days[] = clone $lastDate;
             }
         }
 
