@@ -11,6 +11,6 @@ Of course you can add upper vars in .basrc etc.
 
 ### Track
 ```bash
-php bin/console.php redmine:track -u=111 -i=222 -m='hardworking week'
+php bin/console.php redmine:track -u 111 -i 222 -m 'hardworking week'
 ```
 This will log 8 hours for all working days in the week before today.
