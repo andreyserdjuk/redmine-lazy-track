@@ -1,5 +1,6 @@
 ### About
-Track long-living Redmine Issues for lazy developers.
+Track long-living Redmine Issues for lazy developers.  
+If you have to track same Issue every day, this solution will save your time.
 
 ### Install
 ##### Get your API KEY:
