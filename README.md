@@ -2,12 +2,15 @@
 Track long-living Redmine Issues for lazy developers.
 
 ### Install
+##### Get your API KEY:
+Enter redmine page -> my account -> API access key (on the right sidebar).
+##### Setup environment variables: 
 ```bash
 composer install
 export REDMINE_API_ACCESS_KEY='redmine-api-key'
 export REDMINE_URL='https://myredmine.com'
 ```
-Of course you can add upper vars in .basrc etc.
+You can add upper vars in .basrc, .bash_profile or .profile etc depends on what your console terminal is loading.
 
 ### Track
 ```bash
@@ -18,7 +21,7 @@ php bin/console.php redmine:track \
 -hours 8 \                     # 8 hours per day
 -activity 9                    # activity with id 9 (Development in the most of cases) 
 ```
-Or if you need to copy-paste:
+Or simply copy-paste:
 ```bash
 php bin/console.php redmine:track -u 111 -i 222 -m 'hardworking week' -ho 8 -a 9
 ```
