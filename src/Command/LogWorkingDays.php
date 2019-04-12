@@ -22,9 +22,38 @@ class LogWorkingDays extends Command
         $this->setDescription('Lazy log all working days before current with message');
         $this->setDefinition(
             new InputDefinition([
-                new InputOption('user', 'u', InputOption::VALUE_REQUIRED),
-                new InputOption('issue', 'i', InputOption::VALUE_REQUIRED),
-                new InputOption('message', 'm', InputOption::VALUE_REQUIRED),
+                new InputOption(
+                    'user',
+                    'u',
+                    InputOption::VALUE_REQUIRED,
+                    'User id.'
+                ),
+                new InputOption(
+                    'issue',
+                    'i',
+                    InputOption::VALUE_REQUIRED,
+                    'Issue id.'
+                ),
+                new InputOption(
+                    'message',
+                    'm',
+                    InputOption::VALUE_REQUIRED,
+                    'Text message for issue tracking.'
+                ),
+                new InputOption(
+                    'hours',
+                    'h',
+                    InputOption::VALUE_OPTIONAL,
+                    'Daily working hours.',
+                    8
+                ),
+                new InputOption(
+                    'activity',
+                    'a',
+                    InputOption::VALUE_OPTIONAL,
+                    'Activity id, you can see it by inspecting <select> options.',
+                    9 // Development
+                ),
             ])
         );
     }
@@ -34,6 +63,8 @@ class LogWorkingDays extends Command
         $userId = $input->getOption('user');
         $issueId = $input->getOption('issue');
         $message = $input->getOption('message');
+        $hours = $input->getOption('hours');
+        $activityId = $input->getOption('activity');
 
         $recentEntries = self::getClient()->time_entry->all([
             'user_id' => $userId,
@@ -52,8 +83,8 @@ class LogWorkingDays extends Command
                 self::getClient()->time_entry->create([
                     'issue_id' => $issueId,
                     'spent_on' => $date,
-                    'hours' => 8,
-                    'activity_id' => 9, // Development
+                    'hours' => $hours,
+                    'activity_id' => $activityId,
                     'comments' => $message,
                 ]);
                 $output->writeln(sprintf('Created issue tracking at %s', $date));
