@@ -42,7 +42,7 @@ class LogWorkingDays extends Command
                 ),
                 new InputOption(
                     'hours',
-                    'h',
+                    'ho',
                     InputOption::VALUE_OPTIONAL,
                     'Daily working hours.',
                     8

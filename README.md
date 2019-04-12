@@ -12,14 +12,14 @@ Of course you can add upper vars in .basrc etc.
 ### Track
 ```bash
 php bin/console.php redmine:track \
--u 111 \                # user with id 111  
--i 222 \                # issue with id 222
--m 'hardworking week' \ # message text
--h 8 \                  # 8 hours per day
--a 9                    # activity with id 9 (Development in most cases) 
+-user 111 \                    # user with id 111  
+-issue 222 \                   # issue with id 222
+-message 'hardworking week' \  # message text
+-hours 8 \                     # 8 hours per day
+-activity 9                    # activity with id 9 (Development in the most of cases) 
 ```
 Or if you need to copy-paste:
 ```bash
-php bin/console.php redmine:track -u 111 -i 222 -m 'hardworking week' -h 8 -a 9
+php bin/console.php redmine:track -u 111 -i 222 -m 'hardworking week' -ho 8 -a 9
 ```
 This will track all working days in the week up to today starting from the last active date.
