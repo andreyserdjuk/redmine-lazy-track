@@ -54,6 +54,18 @@ class LogWorkingDays extends Command
                     'Activity id, you can see it by inspecting <select> options.',
                     9 // Development
                 ),
+                new InputOption(
+                    'start-date',
+                    's',
+                    InputOption::VALUE_OPTIONAL,
+                    'Start date for tracking. Otherwise task will be tracked from last tracked day.'
+                ),
+                new InputOption(
+                    'end-date',
+                    'e',
+                    InputOption::VALUE_OPTIONAL,
+                    'End date for tracking. Otherwise task will be tracked up today.'
+                ),
             ])
         );
     }
@@ -66,26 +78,25 @@ class LogWorkingDays extends Command
         $hours = $input->getOption('hours');
         $activityId = $input->getOption('activity');
 
-        $recentEntries = self::getClient()->time_entry->all([
-            'user_id' => $userId,
-            'limit' => 10,
-            'issue' => 11854,
-        ]);
+        $startDate = $input->hasOption('start-date')
+            ? $input->getOption('start-date')
+            : self::getLastTrackedDateFromServer($userId, $issueId);
 
-        $lastEntry = current($recentEntries['time_entries']);
-        $lastDate = $lastEntry['spent_on'];
-        $currentDate = date('Y-m-d');
-        $workingDays = self::getWorkingDays($lastDate, $currentDate);
+        $endDate = $input->hasOption('end-date')
+            ? $input->getOption('end-date')
+            : date('Y-m-d');
+
+        $workingDays = self::getWorkingDays($startDate, $endDate);
 
         foreach ($workingDays as $workingDay) {
             $date = $workingDay->format('Y-m-d');
             try {
                 self::getClient()->time_entry->create([
-                    'issue_id' => $issueId,
-                    'spent_on' => $date,
-                    'hours' => $hours,
+                    'issue_id'    => $issueId,
+                    'spent_on'    => $date,
+                    'hours'       => $hours,
                     'activity_id' => $activityId,
-                    'comments' => $message,
+                    'comments'    => $message,
                 ]);
                 $output->writeln(sprintf('Created issue tracking at %s', $date));
             } catch (\Exception $e) {
@@ -99,7 +110,8 @@ class LogWorkingDays extends Command
      * @param $currentDate
      * @return DateTime[]
      */
-    protected static function getWorkingDays($lastDate, $currentDate) {
+    protected static function getWorkingDays($lastDate, $currentDate)
+    {
         $currentDate = date_create_from_format('Y-m-d', $currentDate);
         $lastDate = date_create_from_format('Y-m-d', $lastDate);
 
@@ -112,5 +124,25 @@ class LogWorkingDays extends Command
         }
 
         return $days;
+    }
+
+    /**
+     * Returns last tracked issue activity date.
+     *
+     * @param string $userId
+     * @param string $issueId
+     * @return string
+     */
+    protected static function getLastTrackedDateFromServer(string $userId, string $issueId): string
+    {
+        $recentEntries = self::getClient()->time_entry->all([
+            'user_id' => $userId,
+            'limit'   => 10,
+            'issue'   => $issueId,
+        ]);
+
+        $lastEntry = current($recentEntries['time_entries']);
+
+        return $lastEntry['spent_on'];
     }
 }

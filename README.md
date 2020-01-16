@@ -18,12 +18,14 @@ You can add upper vars in .basrc, .bash_profile or .profile etc depends on what 
 php bin/console.php redmine:track \
 -user 111 \                    # user with id 111  
 -issue 222 \                   # issue with id 222
+-s 2020-01-12 \                # start tracking from date (not inclusively)
+-e 2020-01-17 \                # end tracking to date
 -message 'hardworking week' \  # message text
 -hours 8 \                     # 8 hours per day
 -activity 9                    # activity with id 9 (Development in the most of cases) 
 ```
 Or simply copy-paste:
 ```bash
-php bin/console.php redmine:track -u 111 -i 222 -m 'hardworking week' -ho 8 -a 9
+php bin/console.php redmine:track -u 256 -i 222 -s 2020-01-12 -e 2020-01-17 -m 'hardworking week' -ho 8 -a 9
 ```
 This will track all working days in the week up to today starting from the last active date.
